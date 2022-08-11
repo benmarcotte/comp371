@@ -40,6 +40,10 @@ GLuint sphereIBO;
 glm::vec3 rotatingLight = glm::vec3(0.0f, 3.0f, 10.0f);
 
 glm::mat4 baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+glm::mat4 benModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+glm::mat4 binoModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+glm::mat4 vobsModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+glm::mat4 chloeModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 glm::vec3 baseModelPos = glm::vec3(1.0f);
 
 Camera camera(glm::vec3(0.0f, 1.0f, 8.0f));
@@ -76,9 +80,9 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && fpsOn)
 		camera.ProcessKeyboard(RIGHT, dt);
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		baseModel = glm::rotate(baseModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+		benModel = glm::rotate(baseModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		baseModel = glm::rotate(baseModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+		benModel = glm::rotate(baseModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void keyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -319,7 +323,7 @@ void renderSkateboard(glm::mat4 baseSkateboard, Shader shader)
 
 }
 
-void renderScene(Shader squareShader, Shader sphereShader, glm::mat4 baseModel)
+void renderScene(Shader squareShader, glm::mat4 benModel, glm::mat4 binoModel, glm::mat4 vobsModel, glm::mat4 chloeModel)
 {
 	squareShader.use();
 	squareShader.setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
@@ -335,9 +339,10 @@ void renderScene(Shader squareShader, Shader sphereShader, glm::mat4 baseModel)
 	glBindVertexArray(meshVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	glBindVertexArray(sphereVAO);
-	glm::mat4 baseBpos = glm::translate(baseModel, glm::vec3(-5.0f, 0.5f, 0.0f)) * scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
-    glDrawArrays(GL_TRIANGLES, 0, 1261);
+	glBindVertexArray(VAO);
+
+	renderB(benModel, squareShader);
+
 
 }
 
@@ -635,7 +640,7 @@ int main() {
 		glClear(GL_DEPTH_BUFFER_BIT);
 		//glActiveTexture(GL_TEXTURE0);
 		//glBindTexture(GL_TEXTURE_2D, crate);
-		renderScene(shadowShader, sphereShader, baseModel);
+		renderScene(shadowShader, benModel, binoModel, vobsModel, chloeModel);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glCullFace(GL_BACK);
 
@@ -710,7 +715,7 @@ int main() {
 		const float radius = 10.0f;
 		float camX = sin(glfwGetTime()) * radius;
 		float camZ = cos(glfwGetTime()) * radius;
-		renderScene(ourShader, sphereShader, baseModel);
+		renderScene(ourShader, benModel, binoModel, vobsModel, chloeModel);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, skybox);
 		ourShader.setVec3("light.specular", 0.0f, 0.0f, 0.0f);
