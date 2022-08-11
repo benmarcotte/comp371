@@ -179,7 +179,7 @@ void keyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
-void renderB(glm::mat4 baseBpos, Shader shader) 
+void renderBen(glm::mat4 baseBpos, Shader shader) 
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, felt);
@@ -209,7 +209,7 @@ void renderB(glm::mat4 baseBpos, Shader shader)
 	shader.setMat4("model", b6);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
-void renderE(glm::mat4 baseEpos, Shader shader) 
+void renderBino(glm::mat4 baseEpos, Shader shader) 
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, felt);
@@ -233,7 +233,7 @@ void renderE(glm::mat4 baseEpos, Shader shader)
 	shader.setMat4("model", e4);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
-void render9(glm::mat4 base9pos, Shader shader) 
+void renderVobs(glm::mat4 base9pos, Shader shader) 
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, felt);
@@ -259,7 +259,7 @@ void render9(glm::mat4 base9pos, Shader shader)
 	shader.setMat4("model", n5);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
-void render7(glm::mat4 base7pos, Shader shader) 
+void renderChloe(glm::mat4 base7pos, Shader shader) 
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, felt);
@@ -341,7 +341,7 @@ void renderScene(Shader squareShader, glm::mat4 benModel, glm::mat4 binoModel, g
 
 	glBindVertexArray(VAO);
 
-	renderB(benModel, squareShader);
+	renderBen(benModel, squareShader);
 
 
 }
