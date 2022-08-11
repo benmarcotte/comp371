@@ -41,9 +41,9 @@ glm::vec3 rotatingLight = glm::vec3(0.0f, 3.0f, 10.0f);
 
 glm::mat4 baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 glm::mat4 benModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 0.0f));
-glm::mat4 binoModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-glm::mat4 vobsModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-glm::mat4 chloeModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+glm::mat4 binoModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 1.0f));
+glm::mat4 vobsModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, -1.0f));
+glm::mat4 chloeModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 2.0f));
 glm::vec3 baseModelPos = glm::vec3(1.0f);
 
 int activeModel = 1;
@@ -160,16 +160,26 @@ void keyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mod
 		if (activeModel == 4)
 			chloeModel = glm::scale(benModel, glm::vec3(0.9f, 0.9f, 0.9f));
 	}
+	if (key == GLFW_KEY_SPACE && action != GLFW_RELEASE)
+	{
+		benModel = glm::translate(glm::mat4(1.0f), vec3((float)((rand() % 100) - 50), -2.0f, (float)((rand() % 100) - 50)));
+		vobsModel = glm::translate(glm::mat4(1.0f), vec3((float)((rand() % 100) - 50), -2.0f, (float)((rand() % 100) - 50)));
+		binoModel = glm::translate(glm::mat4(1.0f), vec3((float)((rand() % 100) - 50), -2.0f, (float)((rand() % 100) - 50)));
+		chloeModel = glm::translate(glm::mat4(1.0f), vec3((float)((rand() % 100) - 50), -2.0f, (float)((rand() % 100) - 50)));
+	}
 	if (key == GLFW_KEY_R && action != GLFW_RELEASE)
 	{
-		baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+		benModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 0.0f));
+		binoModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 1.0f));
+		vobsModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, -1.0f));
+		chloeModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 2.0f));
 		frontCam = false;
 		backCam = false;
 		rotatingCam = false;
 		fpsOn = true;
 		lightSwitch = true;
-		camera = Camera(glm::vec3(0.0f, 1.0f, 8.0f));
-		rotating = Camera(glm::vec3(0.0f, 3.0f, 10.0f));
+		//camera = Camera(glm::vec3(0.0f, 1.0f, 8.0f));
+		//rotating = Camera(glm::vec3(0.0f, 3.0f, 10.0f));
 	}
 }
 
@@ -377,7 +387,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-
+	srand(time(NULL));
 	//creating window object
 	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Quiz 2", NULL, NULL);
 	if (window == NULL) 
