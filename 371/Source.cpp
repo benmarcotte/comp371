@@ -72,13 +72,13 @@ void processInput(GLFWwindow* window)
 		std::cout << "Process terminated by ESC" << std::endl;
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && fpsOn)
-		camera.ProcessKeyboard(FORWARD, dt);
+		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && fpsOn)
-		camera.ProcessKeyboard(BACKWARD, dt);
+		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && fpsOn)
-		camera.ProcessKeyboard(LEFT, dt);
+		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && fpsOn)
-		camera.ProcessKeyboard(RIGHT, dt);
+		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
