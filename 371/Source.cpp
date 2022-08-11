@@ -19,6 +19,7 @@ unsigned int felt;
 unsigned int snow;
 unsigned int carrot;
 bool lightSwitch = true;
+int renderMode = GL_TRIANGLES;
 
 bool fpsOn = true;
 bool frontCam = false;
@@ -41,9 +42,9 @@ glm::vec3 rotatingLight = glm::vec3(0.0f, 3.0f, 10.0f);
 
 glm::mat4 baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 glm::mat4 benModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 0.0f));
-glm::mat4 binoModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 1.0f));
-glm::mat4 vobsModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, -1.0f));
-glm::mat4 chloeModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 2.0f));
+glm::mat4 binoModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f));
+glm::mat4 vobsModel = glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -2.0f, -1.0f));
+glm::mat4 chloeModel = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, -2.0f, 2.0f));
 glm::vec3 baseModelPos = glm::vec3(1.0f);
 
 int activeModel = 1;
@@ -74,52 +75,52 @@ void processInput(GLFWwindow* window)
 		std::cout << "Process terminated by ESC" << std::endl;
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && activeModel == 1)
-		benModel = glm::translate(benModel, glm::vec3(1.0f*dt, 0.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 1)
-		benModel = glm::translate(benModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 1)
 		benModel = glm::translate(benModel, glm::vec3(0.0f, 0.0f, 1.0f*dt));
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 1)
+		benModel = glm::translate(benModel, glm::vec3(0.0f , 0.0f, -1.0f * dt));
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 1)
+		benModel = glm::translate(benModel, glm::vec3(1.0f * dt, 0.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 1)
-		benModel = glm::translate(benModel, glm::vec3(0.0f, 0.0f, -1.0f*dt));
+		benModel = glm::translate(benModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && activeModel == 1)
 		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && activeModel == 1)
 		benModel = glm::rotate(benModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && activeModel == 2)
-		binoModel = glm::translate(binoModel, glm::vec3(1.0f * dt, 0.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 2)
-		binoModel = glm::translate(binoModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 2)
 		binoModel = glm::translate(binoModel, glm::vec3(0.0f, 0.0f, 1.0f * dt));
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 2)
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 2)
 		binoModel = glm::translate(binoModel, glm::vec3(0.0f, 0.0f, -1.0f * dt));
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 2)
+		binoModel = glm::translate(binoModel, glm::vec3(1.0f * dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 2)
+		binoModel = glm::translate(binoModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && activeModel == 2)
 		binoModel = glm::rotate(binoModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && activeModel == 2)
 		binoModel = glm::rotate(binoModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && activeModel == 3)
-		vobsModel = glm::translate(vobsModel, glm::vec3(1.0f * dt, 0.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 3)
-		vobsModel = glm::translate(vobsModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 3)
 		vobsModel = glm::translate(vobsModel, glm::vec3(0.0f, 0.0f, 1.0f * dt));
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 3)
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 3)
 		vobsModel = glm::translate(vobsModel, glm::vec3(0.0f, 0.0f, -1.0f * dt));
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 3)
+		vobsModel = glm::translate(vobsModel, glm::vec3(1.0f * dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 3)
+		vobsModel = glm::translate(vobsModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && activeModel == 3)
 		vobsModel = glm::rotate(vobsModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && activeModel == 3)
 		vobsModel = glm::rotate(vobsModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && activeModel == 4)
-		chloeModel = glm::translate(chloeModel, glm::vec3(1.0f * dt, 0.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 4)
-		chloeModel = glm::translate(chloeModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 4)
 		chloeModel = glm::translate(chloeModel, glm::vec3(0.0f, 0.0f, 1.0f * dt));
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 4)
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 4)
 		chloeModel = glm::translate(chloeModel, glm::vec3(0.0f, 0.0f, -1.0f * dt));
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 4)
+		chloeModel = glm::translate(chloeModel, glm::vec3(1.0f * dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 4)
+		chloeModel = glm::translate(chloeModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && activeModel == 4)
 		chloeModel = glm::rotate(chloeModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && activeModel == 4)
@@ -137,16 +138,28 @@ void keyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_1 && action != GLFW_RELEASE)
 		activeModel = 1;
 	
+	if (key == GLFW_KEY_B && action != GLFW_RELEASE)
+		lightSwitch != lightSwitch;
+
+	if (key == GLFW_KEY_P && action != GLFW_RELEASE)
+		renderMode = GL_POINTS;
+
+	if (key == GLFW_KEY_T && action != GLFW_RELEASE)
+		renderMode = GL_TRIANGLES;
+
+	if (key == GLFW_KEY_L && action != GLFW_RELEASE)
+		renderMode = GL_LINES;
+
 	if (key == GLFW_KEY_U && action != GLFW_RELEASE)
 	{
 		if (activeModel == 1)
 			benModel = glm::scale(benModel, glm::vec3(1.1f, 1.1f, 1.1f));
 		if (activeModel == 2)
-			binoModel = glm::scale(benModel, glm::vec3(1.1f, 1.1f, 1.1f));
+			binoModel = glm::scale(binoModel, glm::vec3(1.1f, 1.1f, 1.1f));
 		if (activeModel == 3)
-			vobsModel = glm::scale(benModel, glm::vec3(1.1f, 1.1f, 1.1f));
+			vobsModel = glm::scale(vobsModel, glm::vec3(1.1f, 1.1f, 1.1f));
 		if (activeModel == 4)
-			chloeModel = glm::scale(benModel, glm::vec3(1.1f, 1.1f, 1.1f));
+			chloeModel = glm::scale(chloeModel, glm::vec3(1.1f, 1.1f, 1.1f));
 
 	}
 	if (key == GLFW_KEY_J && action != GLFW_RELEASE)
@@ -154,11 +167,11 @@ void keyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mod
 		if (activeModel == 1)
 			benModel = glm::scale(benModel, glm::vec3(0.9f, 0.9f, 0.9f));
 		if (activeModel == 2)
-			binoModel = glm::scale(benModel, glm::vec3(0.9f, 0.9f, 0.9f));
+			binoModel = glm::scale(binoModel, glm::vec3(0.9f, 0.9f, 0.9f));
 		if (activeModel == 3)
-			vobsModel = glm::scale(benModel, glm::vec3(0.9f, 0.9f, 0.9f));
+			vobsModel = glm::scale(vobsModel, glm::vec3(0.9f, 0.9f, 0.9f));
 		if (activeModel == 4)
-			chloeModel = glm::scale(benModel, glm::vec3(0.9f, 0.9f, 0.9f));
+			chloeModel = glm::scale(chloeModel, glm::vec3(0.9f, 0.9f, 0.9f));
 	}
 	if (key == GLFW_KEY_SPACE && action != GLFW_RELEASE)
 	{
@@ -170,9 +183,9 @@ void keyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_R && action != GLFW_RELEASE)
 	{
 		benModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 0.0f));
-		binoModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 1.0f));
-		vobsModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, -1.0f));
-		chloeModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 2.0f));
+		binoModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f));
+		vobsModel = glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -2.0f, -1.0f));
+		chloeModel = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, -2.0f, 2.0f));
 		frontCam = false;
 		backCam = false;
 		rotatingCam = false;
@@ -187,141 +200,321 @@ void renderBen(glm::mat4 baseBpos, Shader shader)
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, snow);
-	glm::mat4 b1 = baseBpos;
-	glm::mat4 b2 = baseBpos;
-	glm::mat4 b3 = baseBpos;
-	glm::mat4 b4 = baseBpos;
-	glm::mat4 b5 = baseBpos;
-	glm::mat4 b6 = baseBpos;
-	b1 = glm::translate(baseBpos, glm::vec3(0.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 1.0f, 1.0f));
-	b2 = glm::translate(baseBpos, glm::vec3(0.0f, 0.8f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.8f, 0.8f, 0.8f));
-	b3 = glm::translate(baseBpos, glm::vec3(0.0f, 1.4f, 0.0f)) *glm::scale(glm::mat4(1.0),glm::vec3(0.5f, 0.5f, 0.5f));
 
-	shader.setMat4("model", b1);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", b2);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", b3);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	/*shader.setMat4("model", b4);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", b5);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", b6);
-	glDrawArrays(GL_TRIANGLES, 0, 36);*/
-}
-void renderBino(glm::mat4 baseEpos, Shader shader) 
-{
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, felt);
-	glm::mat4 e1 = baseEpos;
-	glm::mat4 e2 = baseEpos;
-	glm::mat4 e3 = baseEpos;
-	glm::mat4 e4 = baseEpos;
-	glm::mat4 e5 = baseEpos;
-	glm::mat4 e6 = baseEpos;
-	e1 = glm::translate(e1, glm::vec3(0.5f, 3.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(4.0f, 1.0f, 1.0f));
-	e2 = glm::translate(e2, glm::vec3(0.5f, -3.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(4.0f, 1.0f, 1.0f));
-	e3 = glm::translate(e3, glm::vec3(-2.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 8.0f, 1.0f));
-	e4 = glm::translate(e4, glm::vec3(0.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(4.0f, 1.0f, 1.0f));
+	glm::mat4 leftLeg_olaf = baseBpos;
+	leftLeg_olaf = glm::translate(leftLeg_olaf, glm::vec3(-0.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 0.5f, 0.5f));
+	shader.setMat4("model", leftLeg_olaf);
+	glDrawArrays(renderMode, 0, 36);
 
-	shader.setMat4("model", e1);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", e2);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", e3);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", e4);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-}
-void renderVobs(glm::mat4 base9pos, Shader shader) 
-{
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, felt);
-	glm::mat4 n1 = base9pos;
-	glm::mat4 n2 = base9pos;
-	glm::mat4 n3 = base9pos;
-	glm::mat4 n4 = base9pos;
-	glm::mat4 n5 = base9pos;
-	n1 = glm::translate(n1, glm::vec3(0.0f, 3.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(3.0f, 1.0f, 1.0f));
-	n2 = glm::translate(n2, glm::vec3(0.0f, -3.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(3.0f, 1.0f, 1.0f));
-	n3 = glm::translate(n3, glm::vec3(2.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 8.0f, 1.0f));
-	n4 = glm::translate(n4, glm::vec3(0.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(3.0f, 1.0f, 1.0f));
-	n5 = glm::translate(n5, glm::vec3(-2.0f, 1.75f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 2.5f, 1.0f));
+	glm::mat4 rightLeg_olaf = baseBpos;
+	rightLeg_olaf = glm::translate(rightLeg_olaf, glm::vec3(0.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 0.5f, 0.5f));
+	shader.setMat4("model", rightLeg_olaf);
+	glDrawArrays(renderMode, 0, 36);
 
-	shader.setMat4("model", n1);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", n2);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", n3);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", n4);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", n5);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-}
-void renderChloe(glm::mat4 base7pos, Shader shader) 
-{
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, felt);
-	glm::mat4 s1 = base7pos;
-	glm::mat4 s2 = base7pos;
-	glm::mat4 s3 = base7pos;
-	s1 = glm::translate(s1, glm::vec3(0.0f, 3.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(3.0f, 1.0f, 1.0f));
-	s2 = glm::translate(s2, glm::vec3(-2.0f, 2.25f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 3.5f, 1.0f));
-	s3 = glm::translate(s3, glm::vec3(2.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 8.0f, 1.0f));
-
-	shader.setMat4("model", s1);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", s2);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", s3);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-}
-void renderSkateboard(glm::mat4 baseSkateboard, Shader shader)
-{
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, felt);
-	shader.setVec3("light.ambient", 0.25f, 0.20725f, 0.20725f);
-	shader.setVec3("light.diffuse", 1.0f, 0.829f, 0.829f);
-	shader.setVec3("light.specular", 0.296648f, 0.296648f, 0.296648f);
-	shader.setFloat("light.shininess", 32.0f);
-	//* glm::scale(baseSkateboard, glm::vec3(0.75, 0.75, 0.75))
-	glm::mat4 w1 = glm::translate(baseSkateboard, glm::vec3(-7.0f, -0.5f, 0.5f)) ;
-	glm::mat4 w2 = glm::translate(baseSkateboard, glm::vec3(-7.0f, -0.5f, -0.5f));
-	glm::mat4 w3 = glm::translate(baseSkateboard, glm::vec3(7.0f, -0.5f, 0.5f));
-	glm::mat4 w4 = glm::translate(baseSkateboard, glm::vec3(7.0f, -0.5f, -0.5f));
-	w1 = glm::scale(w1, glm::vec3(0.75, 0.75, 0.75));
-	w2 = glm::scale(w2, glm::vec3(0.75, 0.75, 0.75));
-	w3 = glm::scale(w3, glm::vec3(0.75, 0.75, 0.75));
-	w4 = glm::scale(w4, glm::vec3(0.75, 0.75, 0.75));
-
-	shader.setMat4("model", w1);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", w2);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", w3);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", w4);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, felt);
-	shader.setVec3("light.ambient", 0.19225f, 0.19225f, 0.19225f);
-	shader.setVec3("light.diffuse", 0.50754f, 0.50754f, 0.50754f);
-	shader.setVec3("light.specular", 2.0f, 2.0f, 2.0f);
-	shader.setFloat("light.shininess",128.0f);
-	baseSkateboard = glm::scale(baseSkateboard, glm::vec3(15.0f, 0.5f, 2.0f));
-	//glBindVertexArray(VAO);
-
-	shader.setMat4("model", baseSkateboard);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-
+	glm::mat4 body_olaf = baseBpos;
+	body_olaf = glm::translate(body_olaf, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(2.0f, 1.5f, 2.0f));
+	shader.setMat4("model", body_olaf);
+	glDrawArrays(renderMode, 0, 36);
 
 	
+	glm::mat4 leftArm_olaf = baseBpos;
+	leftArm_olaf = glm::translate(leftArm_olaf, glm::vec3(-1.5f, 1.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.5f, 0.50f, 0.5f));
+	shader.setMat4("model", leftArm_olaf);
+	glDrawArrays(renderMode, 0, 36);
 
+	glm::mat4 rightArm_olaf = baseBpos;
+	rightArm_olaf = glm::translate(rightArm_olaf, glm::vec3(1.5f, 1.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.5f, 0.50f, 0.5f));
+	shader.setMat4("model", rightArm_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 head_olaf = baseBpos;
+	head_olaf = glm::translate(head_olaf, glm::vec3(0.0f, 2.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 1.50f, 1.0f));
+	shader.setMat4("model", head_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, carrot);
+
+	glm::mat4 nose_olaf = baseBpos;
+	nose_olaf = glm::translate(nose_olaf, glm::vec3(0.0f, 2.5f, 0.6f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.1f, 0.1f, 0.5f));
+	shader.setMat4("model", nose_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, felt);
+
+	glm::mat4 mouth_olaf = baseBpos;
+	mouth_olaf = glm::translate(mouth_olaf, glm::vec3(0.0f, 2.1f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.05f, 0.1f));
+	shader.setMat4("model", mouth_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 leftEye_olaf = baseBpos;
+	leftEye_olaf = glm::translate(leftEye_olaf, glm::vec3(-0.25f, 2.95f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.1f));
+	shader.setMat4("model", leftEye_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 rightEye_olaf = baseBpos;
+	rightEye_olaf = glm::translate(rightEye_olaf, glm::vec3(0.25f, 2.95f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.1f));
+	shader.setMat4("model", rightEye_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 topButton_olaf = baseBpos;
+	topButton_olaf = glm::translate(topButton_olaf, glm::vec3(0.0f, 1.55f, 1.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.2f));
+	shader.setMat4("model", topButton_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 midButton_olaf = baseBpos;
+	midButton_olaf = glm::translate(midButton_olaf, glm::vec3(0.0f, 1.15f, 1.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.2f));
+	shader.setMat4("model", midButton_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 baseHat_olaf = baseBpos;
+	baseHat_olaf = glm::translate(baseHat_olaf, glm::vec3(0.0f, 3.15f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.2f, 0.3f, 1.2f));
+	shader.setMat4("model", baseHat_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 topHat_olaf = baseBpos;
+	topHat_olaf = glm::translate(topHat_olaf, glm::vec3(0.0f, 3.35f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.8f, 1.0f, 0.8f));
+	shader.setMat4("model", topHat_olaf);
+	glDrawArrays(renderMode, 0, 36);
+}
+void renderBino(glm::mat4 baseBinoPos, Shader shader)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, snow);
+	glm::mat4 e1 = baseBinoPos;
+	e1 = translate(e1, vec3(0.0f, 0.0f, 0.0f)) * scale(mat4(1.0), vec3(0.75f, 0.75f, 0.75f)); // base
+	shader.setMat4("model", e1);
+	glDrawArrays(renderMode, 0, 36);
+	glm::mat4 e2 = baseBinoPos;
+	e2 = translate(e2, vec3(0.0f, 0.65f, 0.0f)) * scale(mat4(1.0), vec3(0.6f, 0.6f, 0.6f)); // chest
+	glm::mat4 e3 = baseBinoPos;
+	shader.setMat4("model", e2);
+	glDrawArrays(renderMode, 0, 36);
+	e3 = translate(e3, vec3(0.0f, 1.1f, 0.0f)) * scale(mat4(1.0), vec3(0.45f, 0.45f, 0.45f)); // head
+	shader.setMat4("model", e3);
+	glDrawArrays(renderMode, 0, 36);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, carrot);
+
+	glm::mat4 e4 = baseBinoPos;
+	e4 = translate(e4, vec3(0.0f, 1.15f, 0.3f)) * scale(mat4(1.0), vec3(0.1f, 0.10f, 0.60f)); // nose
+	shader.setMat4("model", e4);
+	glDrawArrays(renderMode, 0, 36);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, felt);
+
+	glm::mat4 e5 = baseBinoPos;
+	glm::mat4 e6 = baseBinoPos;
+	glm::mat4 e7 = baseBinoPos;
+	glm::mat4 e8 = baseBinoPos;
+	glm::mat4 e9 = baseBinoPos;
+	glm::mat4 e10 = baseBinoPos;
+	e5 = translate(e5, vec3(0.0f, 1.4f, 0.0f)) * scale(mat4(1.0), vec3(1.4f, 0.15f, 0.40f));  // base hat
+	e6 = translate(e6, vec3(0.0f, 1.6f, 0.0f)) * scale(mat4(1.0), vec3(0.4f, 0.45f, 0.30f)); // top hat
+	e7 = translate(e7, vec3(-0.4f, 0.8f, 0.4f)) * scale(mat4(1.0), vec3(0.15f, 0.1f, 0.9f)); // right arm
+	e8 = translate(e8, vec3(0.4f, 0.8f, 0.4f)) * scale(mat4(1.0), vec3(0.15f, 0.1f, 0.9f)); // left arm
+	e9 = translate(e9, vec3(-0.2f, -0.6f, 0.0f)) * scale(mat4(1.0), vec3(0.25f, 0.7f, 0.2f)); // right leg
+	e10 = translate(e10, vec3(0.2f, -0.6f, 0.0f)) * scale(mat4(1.0), vec3(0.25f, 0.7f, 0.2f)); // left leg
+
+	shader.setMat4("model", e5);
+	glDrawArrays(renderMode, 0, 36);
+	shader.setMat4("model", e6);
+	glDrawArrays(renderMode, 0, 36);
+	shader.setMat4("model", e7);
+	glDrawArrays(renderMode, 0, 36);
+	shader.setMat4("model", e8);
+	glDrawArrays(renderMode, 0, 36);
+	shader.setMat4("model", e9);
+	glDrawArrays(renderMode, 0, 36);
+	shader.setMat4("model", e10);
+	glDrawArrays(renderMode, 0, 36);
+}
+void renderVobs(glm::mat4 baseVobspos, Shader shader)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, snow);
+
+	glm::mat4 leftLeg_olaf = baseVobspos;
+	leftLeg_olaf = glm::translate(leftLeg_olaf, glm::vec3(-0.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 1.0f, 0.5f));
+	shader.setMat4("model", leftLeg_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 rightLeg_olaf = baseVobspos;
+	rightLeg_olaf = glm::translate(rightLeg_olaf, glm::vec3(0.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 1.0f, 0.5f));
+	shader.setMat4("model", rightLeg_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 body_olaf = baseVobspos;
+	body_olaf = glm::translate(body_olaf, glm::vec3(0.0f, 1.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(2.5f, 2.0f, 1.5f));
+	shader.setMat4("model", body_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 torso_olaf = baseVobspos;
+	torso_olaf = glm::translate(torso_olaf, glm::vec3(0.0f, 2.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.8f, 0.8f, 1.3f));
+	shader.setMat4("model", torso_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 leftArm_olaf = baseVobspos;
+	leftArm_olaf = glm::translate(leftArm_olaf, glm::vec3(-1.5f, 2.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.5f, 0.20f, 0.5f));
+	shader.setMat4("model", leftArm_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 rightArm_olaf = baseVobspos;
+	rightArm_olaf = glm::translate(rightArm_olaf, glm::vec3(1.5f, 2.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.5f, 0.20f, 0.5f));
+	shader.setMat4("model", rightArm_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 head_olaf = baseVobspos;
+	head_olaf = glm::translate(head_olaf, glm::vec3(0.0f, 3.15f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 1.0f, 1.0f));
+	shader.setMat4("model", head_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, carrot);
+
+	glm::mat4 nose_olaf = baseVobspos;
+	nose_olaf = glm::translate(nose_olaf, glm::vec3(0.0f, 3.35f, 0.6f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.2f, 0.2f, 0.7f));
+	shader.setMat4("model", nose_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, felt);
+
+	glm::mat4 mouth_olaf = baseVobspos;
+	mouth_olaf = glm::translate(mouth_olaf, glm::vec3(0.0f, 3.05f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.70f, 0.35f, 0.1f));
+	shader.setMat4("model", mouth_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 leftEye_olaf = baseVobspos;
+	leftEye_olaf = glm::translate(leftEye_olaf, glm::vec3(-0.25f, 3.45f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.1f, 0.1f, 0.1f));
+	shader.setMat4("model", leftEye_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 rightEye_olaf = baseVobspos;
+	rightEye_olaf = glm::translate(rightEye_olaf, glm::vec3(0.25f, 3.45f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.1f, 0.1f, 0.1f));
+	shader.setMat4("model", rightEye_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 topButton_olaf = baseVobspos;
+	topButton_olaf = glm::translate(topButton_olaf, glm::vec3(0.0f, 2.05f, 1.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.2f));
+	shader.setMat4("model", topButton_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 midButton_olaf = baseVobspos;
+	midButton_olaf = glm::translate(midButton_olaf, glm::vec3(0.0f, 1.65f, 1.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.2f));
+	shader.setMat4("model", midButton_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 botButton_olaf = baseVobspos;
+	botButton_olaf = glm::translate(botButton_olaf, glm::vec3(0.0f, 1.25f, 1.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.2f));
+	shader.setMat4("model", botButton_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 baseHat_olaf = baseVobspos;
+	baseHat_olaf = glm::translate(baseHat_olaf, glm::vec3(0.0f, 3.65f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.7f, 0.3f, 1.7f));
+	shader.setMat4("model", baseHat_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 topHat_olaf = baseVobspos;
+	topHat_olaf = glm::translate(topHat_olaf, glm::vec3(0.0f, 3.85f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.8f, 2.0f, 0.8f));
+	shader.setMat4("model", topHat_olaf);
+	glDrawArrays(renderMode, 0, 36);
+}
+void renderChloe(glm::mat4 chloe_olaf, Shader shader)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, snow);
+
+	glm::mat4 leftLeg_olaf = chloe_olaf;
+	leftLeg_olaf = glm::translate(leftLeg_olaf, glm::vec3(-0.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 0.5f, 0.5f));
+	shader.setMat4("model", leftLeg_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 rightLeg_olaf = chloe_olaf;
+	rightLeg_olaf = glm::translate(rightLeg_olaf, glm::vec3(0.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 0.5f, 0.5f));
+	shader.setMat4("model", rightLeg_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 body_olaf = chloe_olaf;
+	body_olaf = glm::translate(body_olaf, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(2.0f, 1.5f, 1.0f));
+	shader.setMat4("model", body_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 torso_olaf = chloe_olaf;
+	torso_olaf = glm::translate(torso_olaf, glm::vec3(0.0f, 2.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.5f, 0.5f, 1.0f));
+	shader.setMat4("model", torso_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 leftArm_olaf = chloe_olaf;
+	leftArm_olaf = glm::translate(leftArm_olaf, glm::vec3(-1.5f, 2.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.5f, 0.20f, 0.5f));
+	shader.setMat4("model", leftArm_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 rightArm_olaf = chloe_olaf;
+	rightArm_olaf = glm::translate(rightArm_olaf, glm::vec3(1.5f, 2.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.5f, 0.20f, 0.5f));
+	shader.setMat4("model", rightArm_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 head_olaf = chloe_olaf;
+	head_olaf = glm::translate(head_olaf, glm::vec3(0.0f, 2.65f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 1.0f, 1.0f));
+	shader.setMat4("model", head_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, carrot);
+
+	glm::mat4 nose_olaf = chloe_olaf;
+	nose_olaf = glm::translate(nose_olaf, glm::vec3(0.0f, 2.75f, 0.6f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.1f, 0.1f, 0.5f));
+	shader.setMat4("model", nose_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, felt);
+
+	glm::mat4 mouth_olaf = chloe_olaf;
+	mouth_olaf = glm::translate(mouth_olaf, glm::vec3(0.0f, 2.55f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.05f, 0.1f));
+	shader.setMat4("model", mouth_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 leftEye_olaf = chloe_olaf;
+	leftEye_olaf = glm::translate(leftEye_olaf, glm::vec3(-0.25f, 2.95f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.1f));
+	shader.setMat4("model", leftEye_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 rightEye_olaf = chloe_olaf;
+	rightEye_olaf = glm::translate(rightEye_olaf, glm::vec3(0.25f, 2.95f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.1f));
+	shader.setMat4("model", rightEye_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 topButton_olaf = chloe_olaf;
+	topButton_olaf = glm::translate(topButton_olaf, glm::vec3(0.0f, 1.55f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.2f));
+	shader.setMat4("model", topButton_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 midButton_olaf = chloe_olaf;
+	midButton_olaf = glm::translate(midButton_olaf, glm::vec3(0.0f, 1.15f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.2f));
+	shader.setMat4("model", midButton_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 botButton_olaf = chloe_olaf;
+	botButton_olaf = glm::translate(botButton_olaf, glm::vec3(0.0f, 0.75f, 0.5f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.20f, 0.2f, 0.2f));
+	shader.setMat4("model", botButton_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 baseHat_olaf = chloe_olaf;
+	baseHat_olaf = glm::translate(baseHat_olaf, glm::vec3(0.0f, 3.15f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.2f, 0.1f, 1.2f));
+	shader.setMat4("model", baseHat_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	glm::mat4 topHat_olaf = chloe_olaf;
+	topHat_olaf = glm::translate(topHat_olaf, glm::vec3(0.0f, 3.35f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.8f, 0.7f, 0.8f));
+	shader.setMat4("model", topHat_olaf);
+	glDrawArrays(renderMode, 0, 36);
+
+	
 }
 
 void renderScene(Shader squareShader, glm::mat4 benModel, glm::mat4 binoModel, glm::mat4 vobsModel, glm::mat4 chloeModel)
@@ -343,6 +536,9 @@ void renderScene(Shader squareShader, glm::mat4 benModel, glm::mat4 binoModel, g
 	glBindVertexArray(VAO);
 
 	renderBen(benModel, squareShader);
+	renderChloe(chloeModel, squareShader);
+	renderBino(binoModel, squareShader);
+	renderVobs(vobsModel, squareShader);
 
 
 }
@@ -639,7 +835,7 @@ int main() {
 		glm::mat4 lightSpaceMatrix;
 		float near_plane = 30.0f, far_plane = 100.0f;
 		//lightProjection = glm::ortho(-35.0f, 35.0f, -35.0f, 35.0f, 0.1f, far_plane);
-		lightProjection = glm::perspective(glm::cos(glm::radians(70.0f)), 1.0f, 0.1f, 180.0f);
+		lightProjection = glm::perspective(glm::radians(80.0f), 1.0f, 0.1f, 180.0f );
 		lightView = glm::lookAt(lightPos, glm::vec3(0.0f, -1.0f,1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		lightSpaceMatrix = lightProjection * lightView;
 		shadowShader.use();
