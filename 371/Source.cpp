@@ -80,9 +80,9 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && fpsOn)
 		camera.ProcessKeyboard(RIGHT, dt);
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		benModel = glm::rotate(baseModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		benModel = glm::rotate(baseModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+		benModel = glm::rotate(benModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void keyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -182,19 +182,16 @@ void keyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mod
 void renderBen(glm::mat4 baseBpos, Shader shader) 
 {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, felt);
+	glBindTexture(GL_TEXTURE_2D, snow);
 	glm::mat4 b1 = baseBpos;
 	glm::mat4 b2 = baseBpos;
 	glm::mat4 b3 = baseBpos;
 	glm::mat4 b4 = baseBpos;
 	glm::mat4 b5 = baseBpos;
 	glm::mat4 b6 = baseBpos;
-	b1 = glm::translate(b1, glm::vec3(0.0f, 3.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(5.0f, 1.0f, 1.0f));
-	b2 = glm::translate(b2, glm::vec3(0.0f, -3.5f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(5.0f, 1.0f, 1.0f));
-	b3 = glm::translate(b3, glm::vec3(-2.0f, 0.0f, 0.0f)) *glm::scale(glm::mat4(1.0),glm::vec3(1.0f, 6.0f, 1.0f));
-	b4 = glm::translate(b4, glm::vec3(0.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(3.0f, 1.0f, 1.0f));
-	b5 = glm::translate(b5, glm::vec3(2.0f, 1.75f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 2.5f, 1.0f));
-	b6 = glm::translate(b6, glm::vec3(2.0f, -1.75f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 2.5f, 1.0f));
+	b1 = glm::translate(baseBpos, glm::vec3(0.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 1.0f, 1.0f));
+	b2 = glm::translate(baseBpos, glm::vec3(0.0f, 0.8f, 0.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.8f, 0.8f, 0.8f));
+	b3 = glm::translate(baseBpos, glm::vec3(0.0f, 1.4f, 0.0f)) *glm::scale(glm::mat4(1.0),glm::vec3(0.5f, 0.5f, 0.5f));
 
 	shader.setMat4("model", b1);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -202,12 +199,12 @@ void renderBen(glm::mat4 baseBpos, Shader shader)
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	shader.setMat4("model", b3);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
-	shader.setMat4("model", b4);
+	/*shader.setMat4("model", b4);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	shader.setMat4("model", b5);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	shader.setMat4("model", b6);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDrawArrays(GL_TRIANGLES, 0, 36);*/
 }
 void renderBino(glm::mat4 baseEpos, Shader shader) 
 {
