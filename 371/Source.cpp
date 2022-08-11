@@ -17,7 +17,7 @@ const unsigned int SCR_WIDTH = 1024;
 const unsigned int SCR_HEIGHT = 768;
 unsigned int felt;
 unsigned int snow;
-unsigned int skybox;
+unsigned int carrot;
 bool lightSwitch = true;
 
 bool fpsOn = true;
@@ -40,11 +40,13 @@ GLuint sphereIBO;
 glm::vec3 rotatingLight = glm::vec3(0.0f, 3.0f, 10.0f);
 
 glm::mat4 baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-glm::mat4 benModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+glm::mat4 benModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, 0.0f));
 glm::mat4 binoModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 glm::mat4 vobsModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 glm::mat4 chloeModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 glm::vec3 baseModelPos = glm::vec3(1.0f);
+
+int activeModel = 1;
 
 Camera camera(glm::vec3(0.0f, 1.0f, 8.0f));
 Camera front(glm::vec3(0.0f, 1.0f, -10.0f));
@@ -71,101 +73,93 @@ void processInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 		std::cout << "Process terminated by ESC" << std::endl;
 	}
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && fpsOn)
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && activeModel == 1)
+		benModel = glm::translate(benModel, glm::vec3(1.0f*dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 1)
+		benModel = glm::translate(benModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 1)
+		benModel = glm::translate(benModel, glm::vec3(0.0f, 0.0f, 1.0f*dt));
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 1)
+		benModel = glm::translate(benModel, glm::vec3(0.0f, 0.0f, -1.0f*dt));
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && activeModel == 1)
 		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && fpsOn)
-		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && fpsOn)
-		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && fpsOn)
-		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		benModel = glm::rotate(benModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && activeModel == 1)
 		benModel = glm::rotate(benModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && activeModel == 2)
+		binoModel = glm::translate(binoModel, glm::vec3(1.0f * dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 2)
+		binoModel = glm::translate(binoModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 2)
+		binoModel = glm::translate(binoModel, glm::vec3(0.0f, 0.0f, 1.0f * dt));
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 2)
+		binoModel = glm::translate(binoModel, glm::vec3(0.0f, 0.0f, -1.0f * dt));
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && activeModel == 2)
+		binoModel = glm::rotate(binoModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && activeModel == 2)
+		binoModel = glm::rotate(binoModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && activeModel == 3)
+		vobsModel = glm::translate(vobsModel, glm::vec3(1.0f * dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 3)
+		vobsModel = glm::translate(vobsModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 3)
+		vobsModel = glm::translate(vobsModel, glm::vec3(0.0f, 0.0f, 1.0f * dt));
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 3)
+		vobsModel = glm::translate(vobsModel, glm::vec3(0.0f, 0.0f, -1.0f * dt));
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && activeModel == 3)
+		vobsModel = glm::rotate(vobsModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && activeModel == 3)
+		vobsModel = glm::rotate(vobsModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && activeModel == 4)
+		chloeModel = glm::translate(chloeModel, glm::vec3(1.0f * dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && activeModel == 4)
+		chloeModel = glm::translate(chloeModel, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && activeModel == 4)
+		chloeModel = glm::translate(chloeModel, glm::vec3(0.0f, 0.0f, 1.0f * dt));
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && activeModel == 4)
+		chloeModel = glm::translate(chloeModel, glm::vec3(0.0f, 0.0f, -1.0f * dt));
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && activeModel == 4)
+		chloeModel = glm::rotate(chloeModel, 0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && activeModel == 4)
+		chloeModel = glm::rotate(chloeModel, -0.8f * dt, glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void keyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_L && action != GLFW_RELEASE)
-		lightSwitch = !lightSwitch;
-	if (key == GLFW_KEY_M && action != GLFW_RELEASE)
+	if (key == GLFW_KEY_4 && action != GLFW_RELEASE)
+		activeModel = 4;
+	if (key == GLFW_KEY_3 && action != GLFW_RELEASE)
+		activeModel = 3;
+	if (key == GLFW_KEY_2 && action != GLFW_RELEASE)
+		activeModel = 2;
+	if (key == GLFW_KEY_1 && action != GLFW_RELEASE)
+		activeModel = 1;
+	
+	if (key == GLFW_KEY_U && action != GLFW_RELEASE)
 	{
-		if (frontCam)
-		{
-			frontCam = false;
-			fpsOn = !fpsOn;
-		}
-		else 
-		{
-			if (backCam)
-			{
-				backCam = false;
-				frontCam = true;
-			}
-			else if (rotatingCam)
-			{
-				rotatingCam = false;
-				frontCam = true;
-			}
-			else
-			{
-				fpsOn = !fpsOn;
-				frontCam = true;
-			}
-		}
+		if (activeModel == 1)
+			benModel = glm::scale(benModel, glm::vec3(1.1f, 1.1f, 1.1f));
+		if (activeModel == 2)
+			binoModel = glm::scale(benModel, glm::vec3(1.1f, 1.1f, 1.1f));
+		if (activeModel == 3)
+			vobsModel = glm::scale(benModel, glm::vec3(1.1f, 1.1f, 1.1f));
+		if (activeModel == 4)
+			chloeModel = glm::scale(benModel, glm::vec3(1.1f, 1.1f, 1.1f));
+
 	}
-		
-	if (key == GLFW_KEY_B && action != GLFW_RELEASE)
-		if (backCam)
-		{
-			backCam = false;
-			fpsOn = !fpsOn;
-		}
-		else
-		{
-			if (frontCam)
-			{
-				frontCam = false;
-				backCam = true;
-			}
-			else if (rotatingCam)
-			{
-				rotatingCam = false;
-				backCam = true;
-			}
-			else
-			{
-				fpsOn = !fpsOn;
-				backCam = true;
-			}
-		}
-
-	if (key == GLFW_KEY_N && action != GLFW_RELEASE)
-		if (rotatingCam)
-		{
-			rotatingCam = false;
-			fpsOn = !fpsOn;
-		}
-		else
-		{
-			if (frontCam)
-			{
-				frontCam = false;
-				rotatingCam = true;
-			}
-			else if (backCam)
-			{
-				backCam = false;
-				rotatingCam = true;
-			}
-			else
-			{
-				fpsOn = !fpsOn;
-				rotatingCam = true;
-			}
-		}
-
+	if (key == GLFW_KEY_J && action != GLFW_RELEASE)
+	{
+		if (activeModel == 1)
+			benModel = glm::scale(benModel, glm::vec3(0.9f, 0.9f, 0.9f));
+		if (activeModel == 2)
+			binoModel = glm::scale(benModel, glm::vec3(0.9f, 0.9f, 0.9f));
+		if (activeModel == 3)
+			vobsModel = glm::scale(benModel, glm::vec3(0.9f, 0.9f, 0.9f));
+		if (activeModel == 4)
+			chloeModel = glm::scale(benModel, glm::vec3(0.9f, 0.9f, 0.9f));
+	}
 	if (key == GLFW_KEY_R && action != GLFW_RELEASE)
 	{
 		baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
@@ -477,14 +471,24 @@ int main() {
 	}
 	stbi_image_free(data);
 
-	glGenTextures(1, &skybox);
-	glBindTexture(GL_TEXTURE_2D, skybox);
+	glGenTextures(1, &carrot);
+	glBindTexture(GL_TEXTURE_2D, carrot);
 	// set the texture wrapping/filtering options (on the currently bound texture object)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+	data = stbi_load("carrot.jpg", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
 	float verticesSquare[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f, 
 	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f, 
@@ -714,7 +718,7 @@ int main() {
 		float camZ = cos(glfwGetTime()) * radius;
 		renderScene(ourShader, benModel, binoModel, vobsModel, chloeModel);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, skybox);
+		glBindTexture(GL_TEXTURE_2D, carrot);
 		ourShader.setVec3("light.specular", 0.0f, 0.0f, 0.0f);
 		ourShader.setVec3("light2.specular", 0.0f, 0.0f, 0.0f);
 		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
